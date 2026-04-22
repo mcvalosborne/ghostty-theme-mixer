@@ -2,7 +2,7 @@
 
 Live theme & font mixer for the [Ghostty](https://ghostty.org) terminal. Preview 16 color schemes and 4 coding fonts, nudge the background tint, and copy a ready-to-paste config in one click.
 
-**→ [Try it live](https://mcvalosborne.github.io/ghostty-theme-mixer/)**
+**→ [Try it live at ghosttythemes.com](https://ghosttythemes.com)**
 
 ![Ghostty Theme Mixer — live preview of terminal themes and fonts](screenshot.png)
 
