@@ -4,6 +4,8 @@ Live theme & font mixer for the [Ghostty](https://ghostty.org) terminal. Preview
 
 **→ [Try it live](https://mcvalosborne.github.io/ghostty-theme-mixer/)**
 
+![Ghostty Theme Mixer — live preview of terminal themes and fonts](screenshot.png)
+
 ## What's in it
 
 - **16 themes** — four Gruvbox variants, Tokyo Night (+ Storm), Catppuccin (Mocha + Latte), Nord, Dracula, Rosé Pine, Solarized (Dark + Light), Kanagawa, Everforest, GitHub Dark
