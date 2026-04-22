@@ -1,0 +1,1515 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ghostty — Theme & font mixer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Fira+Code:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #fbfaf6;
+        --bg-secondary: #f5f2ea;
+        --bg-elevated: #ffffff;
+        --bg-surface: #f4f4f5;
+
+        --accent: #5e6ad2;
+        --accent-muted: #4f5bc4;
+        --accent-light: rgba(94, 106, 210, 0.1);
+
+        --text-primary: #0a0a0b;
+        --text-secondary: #52525b;
+        --text-muted: #a1a1aa;
+
+        --border: #e6e1d4;
+        --border-subtle: #efebe0;
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-family: "Inter", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .label {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        display: inline-block;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Instrument Serif", Georgia, serif;
+        font-weight: 400;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+      }
+      h1 {
+        font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+      }
+      h1 em,
+      h2 em {
+        font-style: italic;
+        color: var(--text-secondary);
+      }
+      h2 {
+        font-size: clamp(1.875rem, 3.5vw, 2.5rem);
+        line-height: 1.15;
+      }
+      h3 {
+        font-size: 1.5rem;
+        line-height: 1.2;
+      }
+
+      p.lede {
+        font-size: 1.0625rem;
+        color: var(--text-secondary);
+        max-width: 42rem;
+        line-height: 1.65;
+      }
+
+      /* Hero */
+      .hero {
+        padding: 5rem 0 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(94, 106, 210, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(94, 106, 210, 0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        pointer-events: none;
+        mask-image: radial-gradient(
+          circle at 50% 30%,
+          black 0%,
+          transparent 70%
+        );
+        -webkit-mask-image: radial-gradient(
+          circle at 50% 30%,
+          black 0%,
+          transparent 70%
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+      }
+      .hero .label {
+        margin-bottom: 1.25rem;
+      }
+      .hero h1 {
+        margin-bottom: 1.25rem;
+        max-width: 22ch;
+      }
+      .hero p.lede {
+        margin-bottom: 0;
+      }
+
+      /* Mixer */
+      .mixer-section {
+        padding: 3rem 0 5rem;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .mixer {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 1.125rem;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+      }
+
+      @media (max-width: 900px) {
+        .mixer {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .mixer-controls {
+        padding: 2rem;
+        border-right: 1px solid var(--border-subtle);
+        background: var(--bg-primary);
+        display: flex;
+        flex-direction: column;
+        gap: 1.75rem;
+      }
+      @media (max-width: 900px) {
+        .mixer-controls {
+          border-right: none;
+          border-bottom: 1px solid var(--border-subtle);
+        }
+      }
+
+      .mixer-title {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        margin-bottom: -0.5rem;
+      }
+
+      .mixer-field label {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.6875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .mixer-field select {
+        width: 100%;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        padding: 0.625rem 0.75rem;
+        font-family: "Inter", sans-serif;
+        font-size: 0.9375rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2352525b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        padding-right: 2rem;
+      }
+      .mixer-field select:hover {
+        border-color: var(--text-muted);
+      }
+      .mixer-field select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-light);
+      }
+
+      .mixer-slider {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .slider-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .slider-value {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 4px;
+        background: var(--border);
+        border-radius: 9999px;
+        outline: none;
+        cursor: pointer;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: var(--accent);
+        border-radius: 50%;
+        cursor: grab;
+        border: 2px solid var(--bg-elevated);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.15s;
+      }
+      input[type="range"]::-webkit-slider-thumb:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+      input[type="range"]::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: var(--accent);
+        border-radius: 50%;
+        cursor: grab;
+        border: 2px solid var(--bg-elevated);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .reset-btn {
+        background: transparent;
+        border: none;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.6875rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        align-self: flex-start;
+        padding: 0;
+        margin-top: -0.5rem;
+        transition: color 0.15s;
+      }
+      .reset-btn:hover {
+        color: var(--accent);
+      }
+
+      /* Mixer preview */
+      .mixer-preview {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .mixer-preview .terminal {
+        padding: 2rem 2.25rem;
+        min-height: 320px;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        flex-grow: 1;
+      }
+
+      .mixer-config {
+        background: var(--bg-surface);
+        border-top: 1px solid var(--border-subtle);
+        padding: 1rem 1.25rem 1rem 2.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .mixer-config pre {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        white-space: pre;
+        overflow-x: auto;
+        flex-grow: 1;
+      }
+
+      .btn-copy-lg {
+        background: var(--text-primary);
+        color: var(--bg-elevated);
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.15s;
+        white-space: nowrap;
+      }
+      .btn-copy-lg:hover {
+        background: var(--accent);
+      }
+      .btn-copy-lg:active {
+        transform: scale(0.97);
+      }
+      .btn-copy-lg.copied {
+        background: #10b981;
+      }
+
+      /* Sections */
+      section.block {
+        padding: 5rem 0;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      section.block:last-of-type {
+        border-bottom: none;
+      }
+
+      .section-head {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 3rem;
+        max-width: 52rem;
+      }
+      .section-head .label {
+        margin-bottom: 0.25rem;
+      }
+      .section-head p {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.25rem;
+      }
+      .font-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+      }
+      @media (max-width: 820px) {
+        .font-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .preview {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 0.875rem;
+        overflow: hidden;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
+        display: flex;
+        flex-direction: column;
+      }
+      .preview:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        border-color: #d9d2c0;
+      }
+
+      .preview-head {
+        padding: 1.125rem 1.25rem 0.875rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .preview-title {
+        font-family: "Instrument Serif", serif;
+        font-size: 1.25rem;
+        font-weight: 400;
+        line-height: 1.1;
+        color: var(--text-primary);
+      }
+      .preview-desc {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        margin-top: 0.25rem;
+        line-height: 1.45;
+      }
+
+      .copy-btn {
+        flex-shrink: 0;
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 0.375rem;
+        padding: 0.3125rem 0.5625rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.625rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+      }
+      .copy-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        background: var(--accent-light);
+      }
+      .copy-btn.copied {
+        color: #059669;
+        border-color: #10b981;
+        background: rgba(16, 185, 129, 0.08);
+      }
+
+      /* Terminal preview (uses theme vars) */
+      .terminal {
+        padding: 1.125rem 1.375rem 1.375rem;
+        background: var(--t-bg, #1d2021);
+        color: var(--t-fg, #ebdbb2);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.78125rem;
+        line-height: 1.55;
+        min-height: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.12rem;
+      }
+
+      .terminal .prompt-line {
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+      }
+      .t-user {
+        color: var(--t-green);
+        font-weight: 500;
+      }
+      .t-host {
+        color: var(--t-fg);
+        opacity: 0.75;
+      }
+      .t-path {
+        color: var(--t-blue);
+      }
+      .t-arrow {
+        color: var(--t-purple);
+        font-weight: 600;
+      }
+      .t-cmd {
+        color: var(--t-fg);
+      }
+      .t-flag {
+        color: var(--t-yellow);
+      }
+      .t-str {
+        color: var(--t-green);
+      }
+      .t-red {
+        color: var(--t-red);
+      }
+      .t-green {
+        color: var(--t-green);
+      }
+      .t-yellow {
+        color: var(--t-yellow);
+      }
+      .t-blue {
+        color: var(--t-blue);
+      }
+      .t-purple {
+        color: var(--t-purple);
+      }
+      .t-aqua {
+        color: var(--t-aqua);
+      }
+      .t-orange {
+        color: var(--t-orange);
+      }
+      .t-comment {
+        color: var(--t-muted);
+        font-style: italic;
+      }
+      .t-dim {
+        opacity: 0.7;
+      }
+      .terminal .spacer {
+        height: 0.5rem;
+      }
+
+      .lig-badge {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.625rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        vertical-align: middle;
+        margin-left: 0.5rem;
+        padding: 0.125rem 0.375rem;
+        background: var(--accent-light);
+        border-radius: 0.25rem;
+        color: var(--accent);
+      }
+
+      /* Font-specific overrides */
+      .font-firacode .terminal {
+        font-family: "Fira Code", "JetBrains Mono", monospace;
+        font-feature-settings:
+          "calt" 1,
+          "ss01" 1;
+      }
+      .font-jetbrains .terminal {
+        font-family: "JetBrains Mono", monospace;
+        font-feature-settings: "calt" 1;
+      }
+      .font-plex .terminal {
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .font-geist .terminal {
+        font-family: "Geist Mono", "JetBrains Mono", monospace;
+      }
+
+      /* Footer */
+      footer {
+        padding: 4rem 0 5rem;
+        background: var(--bg-secondary);
+        border-top: 1px solid var(--border);
+      }
+      footer .label {
+        margin-bottom: 1rem;
+      }
+      footer h2 {
+        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        margin-bottom: 1.5rem;
+        max-width: 28ch;
+      }
+
+      .apply-steps {
+        list-style: none;
+        counter-reset: step;
+        margin-top: 2rem;
+        max-width: 48rem;
+      }
+      .apply-steps li {
+        counter-increment: step;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-subtle);
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1.25rem;
+        align-items: baseline;
+      }
+      .apply-steps li::before {
+        content: counter(step, decimal-leading-zero);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+      }
+      .apply-steps code {
+        font-family: "JetBrains Mono", monospace;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-size: 0.8125rem;
+        color: var(--text-primary);
+      }
+
+      .colophon {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-subtle);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: space-between;
+      }
+      .colophon a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1px;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .colophon a:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
+      /* Fade-in */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-in {
+        animation: fadeIn 0.4s ease both;
+      }
+
+      /* Toast */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(120%);
+        background: #0a0a0b;
+        color: #fafafa;
+        padding: 0.625rem 1rem;
+        border-radius: 0.5rem;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        box-shadow: var(--shadow-lg);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 100;
+        pointer-events: none;
+        max-width: 90vw;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="container hero-content">
+        <span class="label">A field guide · v2.0 · mixer</span>
+        <h1>Ghostty themes &amp; fonts, <em>mixed to taste.</em></h1>
+        <p class="lede">
+          Sixteen color schemes, four coding fonts, and a slider for background
+          tint. Pick any combination, copy the config, paste into
+          <code
+            style="
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              background: var(--bg-surface);
+              padding: 0.125rem 0.375rem;
+              border-radius: 0.25rem;
+              font-size: 0.9375rem;
+            "
+            >~/.config/ghostty/config</code
+          >, and reload with ⌘⇧, to apply.
+        </p>
+      </div>
+    </section>
+
+    <section class="mixer-section">
+      <div class="container">
+        <div class="mixer">
+          <div class="mixer-controls">
+            <div class="mixer-title">Mixer</div>
+
+            <div class="mixer-field">
+              <label for="mix-theme">Color scheme</label>
+              <select id="mix-theme"></select>
+            </div>
+
+            <div class="mixer-field">
+              <label for="mix-font">Typeface</label>
+              <select id="mix-font"></select>
+            </div>
+
+            <div class="mixer-field mixer-slider">
+              <div class="slider-head">
+                <label for="mix-bg" style="margin-bottom: 0"
+                  >Background tint</label
+                >
+                <span class="slider-value" id="mix-bg-value">0</span>
+              </div>
+              <input
+                type="range"
+                id="mix-bg"
+                min="-25"
+                max="25"
+                value="0"
+                step="1"
+              />
+            </div>
+
+            <button class="reset-btn" id="mix-reset">Reset to defaults</button>
+          </div>
+
+          <div class="mixer-preview">
+            <div class="terminal" id="mix-terminal"></div>
+            <div class="mixer-config">
+              <pre id="mix-config"></pre>
+              <button class="btn-copy-lg" id="mix-copy">Copy config</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="container">
+        <div class="section-head">
+          <span class="label">Part one</span>
+          <h2>Color schemes, <em>sixteen ways.</em></h2>
+          <p>
+            Every palette rendered in its actual hex values. Scroll to compare.
+            Click any "Copy" to grab just the theme line.
+          </p>
+        </div>
+        <div class="theme-grid" id="theme-grid"></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="container">
+        <div class="section-head">
+          <span class="label">Part two</span>
+          <h2>Typefaces, <em>same palette, different voice.</em></h2>
+          <p>
+            Same colors, same content, different font. Compare
+            <code
+              style="
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+                background: var(--bg-surface);
+                padding: 0.0625rem 0.3125rem;
+                border-radius: 0.25rem;
+                font-size: 0.9375rem;
+              "
+              >=&gt;</code
+            >,
+            <code
+              style="
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+                background: var(--bg-surface);
+                padding: 0.0625rem 0.3125rem;
+                border-radius: 0.25rem;
+                font-size: 0.9375rem;
+              "
+              >!=</code
+            >,
+            <code
+              style="
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+                background: var(--bg-surface);
+                padding: 0.0625rem 0.3125rem;
+                border-radius: 0.25rem;
+                font-size: 0.9375rem;
+              "
+              >-&gt;</code
+            >
+            for ligatures; the shapes of
+            <code
+              style="
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+                background: var(--bg-surface);
+                padding: 0.0625rem 0.3125rem;
+                border-radius: 0.25rem;
+                font-size: 0.9375rem;
+              "
+              >a</code
+            >,
+            <code
+              style="
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+                background: var(--bg-surface);
+                padding: 0.0625rem 0.3125rem;
+                border-radius: 0.25rem;
+                font-size: 0.9375rem;
+              "
+              >g</code
+            >,
+            <code
+              style="
+                font-family: &quot;JetBrains Mono&quot;, monospace;
+                background: var(--bg-surface);
+                padding: 0.0625rem 0.3125rem;
+                border-radius: 0.25rem;
+                font-size: 0.9375rem;
+              "
+              >0</code
+            >
+            for personality.
+          </p>
+        </div>
+        <div class="font-grid" id="font-grid"></div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <span class="label">How to apply</span>
+        <h2>Three lines to a <em>new look.</em></h2>
+
+        <ol class="apply-steps">
+          <li>
+            <div>
+              Use the <strong>mixer</strong> above (or click Copy on any card) —
+              the config goes to your clipboard.
+            </div>
+          </li>
+          <li>
+            <div>
+              Open your config: <code>~/.config/ghostty/config</code> — replace
+              or add the lines.
+            </div>
+          </li>
+          <li>
+            <div>
+              Reload with <code>⌘ ⇧ ,</code>. The change appears instantly. No
+              restart needed.
+            </div>
+          </li>
+          <li>
+            <div>
+              For fonts not installed:
+              <code>brew install --cask font-&lt;name&gt;</code>. Check with
+              <code>ghostty +list-fonts</code>.
+            </div>
+          </li>
+          <li>
+            <div>
+              Theme name not recognised? Run
+              <code>ghostty +list-themes | grep -i &lt;name&gt;</code> to find
+              the exact spelling Ghostty uses.
+            </div>
+          </li>
+        </ol>
+
+        <div class="colophon">
+          <span>Generated locally · ~/Desktop/ghostty-preview.html</span>
+          <span
+            ><a href="https://ghostty.org/docs" target="_blank" rel="noopener"
+              >ghostty.org/docs ↗</a
+            ></span
+          >
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast">Copied</div>
+
+    <script>
+      // -------- Data --------
+      const themes = [
+        {
+          name: "Gruvbox Dark Hard",
+          key: "Gruvbox Dark Hard",
+          desc: "Deepest brown. Max contrast. Classic late-night.",
+          p: {
+            bg: "#1d2021",
+            fg: "#ebdbb2",
+            red: "#fb4934",
+            green: "#b8bb26",
+            yellow: "#fabd2f",
+            blue: "#83a598",
+            purple: "#d3869b",
+            aqua: "#8ec07c",
+            orange: "#fe8019",
+            muted: "#928374",
+          },
+        },
+        {
+          name: "Gruvbox Dark",
+          key: "Gruvbox Dark",
+          desc: "The original. Warmer than Hard, same soul.",
+          p: {
+            bg: "#282828",
+            fg: "#ebdbb2",
+            red: "#fb4934",
+            green: "#b8bb26",
+            yellow: "#fabd2f",
+            blue: "#83a598",
+            purple: "#d3869b",
+            aqua: "#8ec07c",
+            orange: "#fe8019",
+            muted: "#928374",
+          },
+        },
+        {
+          name: "Gruvbox Light Hard",
+          key: "Gruvbox Light Hard",
+          desc: "Cream paper, dark ink. Your current setup.",
+          p: {
+            bg: "#f9f5d7",
+            fg: "#3c3836",
+            red: "#9d0006",
+            green: "#79740e",
+            yellow: "#b57614",
+            blue: "#076678",
+            purple: "#8f3f71",
+            aqua: "#427b58",
+            orange: "#af3a03",
+            muted: "#7c6f64",
+          },
+        },
+        {
+          name: "Gruvbox Material Dark",
+          key: "Gruvbox Material Dark",
+          desc: "Softer, desaturated. For long sessions.",
+          p: {
+            bg: "#292828",
+            fg: "#d4be98",
+            red: "#ea6962",
+            green: "#a9b665",
+            yellow: "#d8a657",
+            blue: "#7daea3",
+            purple: "#d3869b",
+            aqua: "#89b482",
+            orange: "#e78a4e",
+            muted: "#928374",
+          },
+        },
+        {
+          name: "Tokyo Night",
+          key: "Tokyo Night",
+          desc: "Cool blues, soft purples. City-at-night mood.",
+          p: {
+            bg: "#1a1b26",
+            fg: "#c0caf5",
+            red: "#f7768e",
+            green: "#9ece6a",
+            yellow: "#e0af68",
+            blue: "#7aa2f7",
+            purple: "#bb9af7",
+            aqua: "#7dcfff",
+            orange: "#ff9e64",
+            muted: "#565f89",
+          },
+        },
+        {
+          name: "Tokyo Night Storm",
+          key: "Tokyo Night Storm",
+          desc: "Tokyo Night with softer bg. Less harsh in low light.",
+          p: {
+            bg: "#24283b",
+            fg: "#c0caf5",
+            red: "#f7768e",
+            green: "#9ece6a",
+            yellow: "#e0af68",
+            blue: "#7aa2f7",
+            purple: "#bb9af7",
+            aqua: "#7dcfff",
+            orange: "#ff9e64",
+            muted: "#565f89",
+          },
+        },
+        {
+          name: "Catppuccin Mocha",
+          key: "Catppuccin Mocha",
+          desc: "Pastel, lavender base. Gentle, never harsh.",
+          p: {
+            bg: "#1e1e2e",
+            fg: "#cdd6f4",
+            red: "#f38ba8",
+            green: "#a6e3a1",
+            yellow: "#f9e2af",
+            blue: "#89b4fa",
+            purple: "#cba6f7",
+            aqua: "#94e2d5",
+            orange: "#fab387",
+            muted: "#6c7086",
+          },
+        },
+        {
+          name: "Catppuccin Latte",
+          key: "Catppuccin Latte",
+          desc: "Catppuccin's light mode. Warm, milky.",
+          p: {
+            bg: "#eff1f5",
+            fg: "#4c4f69",
+            red: "#d20f39",
+            green: "#40a02b",
+            yellow: "#df8e1d",
+            blue: "#1e66f5",
+            purple: "#8839ef",
+            aqua: "#179299",
+            orange: "#fe640b",
+            muted: "#9ca0b0",
+          },
+        },
+        {
+          name: "Nord",
+          key: "nord",
+          desc: "Arctic, restrained. Low-sat blues. Scandinavian.",
+          p: {
+            bg: "#2e3440",
+            fg: "#d8dee9",
+            red: "#bf616a",
+            green: "#a3be8c",
+            yellow: "#ebcb8b",
+            blue: "#81a1c1",
+            purple: "#b48ead",
+            aqua: "#88c0d0",
+            orange: "#d08770",
+            muted: "#616e88",
+          },
+        },
+        {
+          name: "Dracula",
+          key: "Dracula",
+          desc: "High saturation. Pink, cyan, purple. Unmistakable.",
+          p: {
+            bg: "#282a36",
+            fg: "#f8f8f2",
+            red: "#ff5555",
+            green: "#50fa7b",
+            yellow: "#f1fa8c",
+            blue: "#8be9fd",
+            purple: "#bd93f9",
+            aqua: "#8be9fd",
+            orange: "#ffb86c",
+            muted: "#6272a4",
+          },
+        },
+        {
+          name: "Rosé Pine",
+          key: "rose-pine",
+          desc: "Muted plum bg. Rose, iris, foam. Poetic.",
+          p: {
+            bg: "#191724",
+            fg: "#e0def4",
+            red: "#eb6f92",
+            green: "#31748f",
+            yellow: "#f6c177",
+            blue: "#9ccfd8",
+            purple: "#c4a7e7",
+            aqua: "#ebbcba",
+            orange: "#ebbcba",
+            muted: "#6e6a86",
+          },
+        },
+        {
+          name: "Solarized Dark",
+          key: "Solarized Dark - Patched",
+          desc: "Scientifically calibrated. The classic.",
+          p: {
+            bg: "#002b36",
+            fg: "#839496",
+            red: "#dc322f",
+            green: "#859900",
+            yellow: "#b58900",
+            blue: "#268bd2",
+            purple: "#6c71c4",
+            aqua: "#2aa198",
+            orange: "#cb4b16",
+            muted: "#586e75",
+          },
+        },
+        {
+          name: "Solarized Light",
+          key: "Solarized Light",
+          desc: "Same math, inverted. Calm cream for daytime.",
+          p: {
+            bg: "#fdf6e3",
+            fg: "#657b83",
+            red: "#dc322f",
+            green: "#859900",
+            yellow: "#b58900",
+            blue: "#268bd2",
+            purple: "#6c71c4",
+            aqua: "#2aa198",
+            orange: "#cb4b16",
+            muted: "#93a1a1",
+          },
+        },
+        {
+          name: "Kanagawa",
+          key: "Kanagawa",
+          desc: "Inspired by Hokusai. Muted, painterly.",
+          p: {
+            bg: "#1f1f28",
+            fg: "#dcd7ba",
+            red: "#c34043",
+            green: "#76946a",
+            yellow: "#dca561",
+            blue: "#7e9cd8",
+            purple: "#957fb8",
+            aqua: "#7aa89f",
+            orange: "#ffa066",
+            muted: "#727169",
+          },
+        },
+        {
+          name: "Everforest Dark",
+          key: "Everforest Dark Hard",
+          desc: "Forest greens and earth tones. Calm.",
+          p: {
+            bg: "#2d353b",
+            fg: "#d3c6aa",
+            red: "#e67e80",
+            green: "#a7c080",
+            yellow: "#dbbc7f",
+            blue: "#7fbbb3",
+            purple: "#d699b6",
+            aqua: "#83c092",
+            orange: "#e69875",
+            muted: "#859289",
+          },
+        },
+        {
+          name: "GitHub Dark",
+          key: "GitHub Dark",
+          desc: "Familiar. Matches GitHub's web UI precisely.",
+          p: {
+            bg: "#0d1117",
+            fg: "#c9d1d9",
+            red: "#ff7b72",
+            green: "#7ee787",
+            yellow: "#f2cc60",
+            blue: "#79c0ff",
+            purple: "#d2a8ff",
+            aqua: "#a5d6ff",
+            orange: "#ffa657",
+            muted: "#8b949e",
+          },
+        },
+      ];
+
+      const fonts = [
+        {
+          name: "Fira Code",
+          key: "Fira Code",
+          cls: "font-firacode",
+          desc: "Geometric, ligature-rich. Most popular coding font.",
+          css: "'Fira Code', 'JetBrains Mono', monospace",
+          ligatures: true,
+        },
+        {
+          name: "JetBrains Mono",
+          key: "JetBrains Mono",
+          cls: "font-jetbrains",
+          desc: "Crisp, slightly tall. Technical. Safe default.",
+          css: "'JetBrains Mono', monospace",
+          ligatures: true,
+        },
+        {
+          name: "IBM Plex Mono",
+          key: "IBM Plex Mono",
+          cls: "font-plex",
+          desc: "Editorial and crisp. Feels like a print specimen.",
+          css: "'IBM Plex Mono', monospace",
+          ligatures: false,
+        },
+        {
+          name: "Geist Mono",
+          key: "Geist Mono",
+          cls: "font-geist",
+          desc: "Vercel's. Modern, narrower. Quietly confident.",
+          css: "'Geist Mono', 'JetBrains Mono', monospace",
+          ligatures: false,
+        },
+      ];
+
+      // -------- Color helpers (hex <-> HSL with lightness tweak) --------
+      function hexToRgb(h) {
+        h = h.replace("#", "");
+        if (h.length === 3)
+          h = h
+            .split("")
+            .map((c) => c + c)
+            .join("");
+        return {
+          r: parseInt(h.slice(0, 2), 16),
+          g: parseInt(h.slice(2, 4), 16),
+          b: parseInt(h.slice(4, 6), 16),
+        };
+      }
+      function rgbToHex({ r, g, b }) {
+        const to = (n) =>
+          Math.max(0, Math.min(255, Math.round(n)))
+            .toString(16)
+            .padStart(2, "0");
+        return "#" + to(r) + to(g) + to(b);
+      }
+      function rgbToHsl({ r, g, b }) {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        const max = Math.max(r, g, b),
+          min = Math.min(r, g, b);
+        let h,
+          s,
+          l = (max + min) / 2;
+        if (max === min) {
+          h = 0;
+          s = 0;
+        } else {
+          const d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r:
+              h = (g - b) / d + (g < b ? 6 : 0);
+              break;
+            case g:
+              h = (b - r) / d + 2;
+              break;
+            case b:
+              h = (r - g) / d + 4;
+              break;
+          }
+          h /= 6;
+        }
+        return { h: h * 360, s: s * 100, l: l * 100 };
+      }
+      function hslToRgb({ h, s, l }) {
+        h /= 360;
+        s /= 100;
+        l /= 100;
+        if (s === 0) return { r: l * 255, g: l * 255, b: l * 255 };
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1 / 6) return p + (q - p) * 6 * t;
+          if (t < 1 / 2) return q;
+          if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+          return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        return {
+          r: hue2rgb(p, q, h + 1 / 3) * 255,
+          g: hue2rgb(p, q, h) * 255,
+          b: hue2rgb(p, q, h - 1 / 3) * 255,
+        };
+      }
+      function tintBg(hex, offset) {
+        if (offset === 0) return hex;
+        const hsl = rgbToHsl(hexToRgb(hex));
+        hsl.l = Math.max(0, Math.min(100, hsl.l + offset));
+        return rgbToHex(hslToRgb(hsl));
+      }
+
+      // -------- Terminal content renderers --------
+      function terminalGallery(p) {
+        return `
+          <div class="prompt-line"><span class="t-user">mcval</span><span class="t-host">@ghost</span> <span class="t-path">~/dev</span></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">git status</span></div>
+          <div><span class="t-dim">On branch</span> <span class="t-green">main</span></div>
+          <div><span class="t-yellow">  modified:</span>   config/ghostty</div>
+          <div><span class="t-red">  deleted:</span>    old.md</div>
+          <div><span class="t-green">  new file:</span>   themes.md</div>
+          <div class="spacer"></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">ghostty</span> <span class="t-flag">--version</span></div>
+          <div><span class="t-aqua">1.1.0</span> <span class="t-comment"># ready to fly</span></div>`;
+      }
+      function terminalFont() {
+        return `
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">const</span> <span class="t-blue">compare</span> <span class="t-purple">=</span> <span class="t-yellow">() =&gt;</span> {</div>
+          <div><span class="t-cmd">  if</span> (<span class="t-blue">status</span> <span class="t-purple">!=</span> <span class="t-orange">"ok"</span>) <span class="t-purple">=&gt;</span></div>
+          <div><span class="t-cmd">    </span><span class="t-blue">retry</span>(<span class="t-orange">3</span>)</div>
+          <div><span class="t-cmd">  </span><span class="t-comment">// ligatures: -&gt; =&gt; != &gt;= &lt;= ...</span></div>
+          <div><span class="t-cmd">  return</span> <span class="t-orange">true</span></div>
+          <div>}</div>
+          <div class="spacer"></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">npm run dev</span> <span class="t-comment"># -&gt; :5173</span></div>
+          <div><span class="t-green">VITE v5.0</span> <span class="t-purple">ready</span> <span class="t-yellow">421ms</span></div>`;
+      }
+      function terminalMixer() {
+        return `
+          <div class="prompt-line"><span class="t-user">mcval</span><span class="t-host">@ghost</span> <span class="t-path">~/dev/ghostty</span></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">ls</span> <span class="t-flag">-la</span></div>
+          <div><span class="t-blue">config/</span>  <span class="t-blue">src/</span>  <span class="t-green">install.sh</span>  README.md</div>
+          <div class="spacer"></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">git status</span></div>
+          <div><span class="t-dim">On branch</span> <span class="t-green">main</span> <span class="t-comment"># up to date</span></div>
+          <div><span class="t-yellow">  modified:</span>   ghostty/config</div>
+          <div><span class="t-green">  new file:</span>   themes.md</div>
+          <div class="spacer"></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">const</span> <span class="t-blue">theme</span> <span class="t-purple">=</span> <span class="t-orange">"ghostty"</span></div>
+          <div><span class="t-cmd">  if</span> (<span class="t-blue">ready</span>) <span class="t-purple">=&gt;</span> <span class="t-blue">deploy</span>()</div>
+          <div class="spacer"></div>
+          <div class="prompt-line"><span class="t-arrow">→</span> <span class="t-cmd">npm run dev</span>  <span class="t-comment"># -&gt; localhost:5173</span></div>
+          <div><span class="t-green">✓</span> <span class="t-aqua">VITE v5.0</span> <span class="t-purple">ready</span> in <span class="t-yellow">421ms</span></div>`;
+      }
+
+      // -------- Gallery render --------
+      function paletteVars(p) {
+        return `--t-bg:${p.bg};--t-fg:${p.fg};--t-red:${p.red};--t-green:${p.green};--t-yellow:${p.yellow};--t-blue:${p.blue};--t-purple:${p.purple};--t-aqua:${p.aqua};--t-orange:${p.orange};--t-muted:${p.muted};`;
+      }
+
+      function renderThemes() {
+        const grid = document.getElementById("theme-grid");
+        grid.innerHTML = themes
+          .map(
+            (t, i) => `
+          <article class="preview animate-in" style="animation-delay: ${(i * 0.03).toFixed(2)}s">
+            <div class="preview-head">
+              <div>
+                <div class="preview-title">${t.name}</div>
+                <div class="preview-desc">${t.desc}</div>
+              </div>
+              <button class="copy-btn" data-config="theme = ${t.key}">Copy</button>
+            </div>
+            <div class="terminal" style="${paletteVars(t.p)}">${terminalGallery(t.p)}</div>
+          </article>
+        `,
+          )
+          .join("");
+      }
+
+      function renderFonts() {
+        const grid = document.getElementById("font-grid");
+        const lightPalette = themes.find(
+          (t) => t.name === "Gruvbox Light Hard",
+        ).p;
+        const tinted = { ...lightPalette, bg: "#f4ecc2" };
+        grid.innerHTML = fonts
+          .map(
+            (f, i) => `
+          <article class="preview animate-in ${f.cls}" style="animation-delay: ${(i * 0.05).toFixed(2)}s">
+            <div class="preview-head">
+              <div>
+                <div class="preview-title">${f.name}${f.ligatures ? ' <span class="lig-badge">lig</span>' : ""}</div>
+                <div class="preview-desc">${f.desc}</div>
+              </div>
+              <button class="copy-btn" data-config='font-family = "${f.key}"'>Copy</button>
+            </div>
+            <div class="terminal" style="${paletteVars(tinted)}">${terminalFont()}</div>
+          </article>
+        `,
+          )
+          .join("");
+      }
+
+      // -------- Mixer --------
+      const state = {
+        themeIdx: 2, // Gruvbox Light Hard (user's current)
+        fontIdx: 0, // Fira Code (user's current)
+        bgOffset: -2, // approximately matches their f4ecc2 nudge
+      };
+
+      function populateDropdowns() {
+        const ts = document.getElementById("mix-theme");
+        ts.innerHTML = themes
+          .map((t, i) => `<option value="${i}">${t.name}</option>`)
+          .join("");
+        const fs = document.getElementById("mix-font");
+        fs.innerHTML = fonts
+          .map((f, i) => `<option value="${i}">${f.name}</option>`)
+          .join("");
+        ts.value = state.themeIdx;
+        fs.value = state.fontIdx;
+        document.getElementById("mix-bg").value = state.bgOffset;
+      }
+
+      function renderMixer() {
+        const theme = themes[state.themeIdx];
+        const font = fonts[state.fontIdx];
+        const tinted = { ...theme.p, bg: tintBg(theme.p.bg, state.bgOffset) };
+
+        const term = document.getElementById("mix-terminal");
+        term.setAttribute(
+          "style",
+          paletteVars(tinted) +
+            `font-family:${font.css};${font.ligatures ? 'font-feature-settings:"calt" 1;' : ""}`,
+        );
+        term.innerHTML = terminalMixer();
+
+        document.getElementById("mix-bg-value").textContent =
+          (state.bgOffset > 0 ? "+" : "") + state.bgOffset;
+
+        const lines = [`theme = ${theme.key}`];
+        if (state.bgOffset !== 0)
+          lines.push(`background = ${tinted.bg.replace("#", "")}`);
+        lines.push(`font-family = "${font.key}"`);
+        lines.push(`font-size = 14`);
+        document.getElementById("mix-config").textContent = lines.join("\n");
+      }
+
+      function wireMixer() {
+        document.getElementById("mix-theme").addEventListener("change", (e) => {
+          state.themeIdx = +e.target.value;
+          renderMixer();
+        });
+        document.getElementById("mix-font").addEventListener("change", (e) => {
+          state.fontIdx = +e.target.value;
+          renderMixer();
+        });
+        document.getElementById("mix-bg").addEventListener("input", (e) => {
+          state.bgOffset = +e.target.value;
+          renderMixer();
+        });
+        document.getElementById("mix-reset").addEventListener("click", () => {
+          state.themeIdx = 2;
+          state.fontIdx = 0;
+          state.bgOffset = -2;
+          populateDropdowns();
+          renderMixer();
+        });
+        document
+          .getElementById("mix-copy")
+          .addEventListener("click", async () => {
+            const text = document.getElementById("mix-config").textContent;
+            await copyToClipboard(text);
+            const btn = document.getElementById("mix-copy");
+            btn.textContent = "Copied";
+            btn.classList.add("copied");
+            showToast(text.split("\n")[0] + "…");
+            setTimeout(() => {
+              btn.textContent = "Copy config";
+              btn.classList.remove("copied");
+            }, 1800);
+          });
+      }
+
+      // -------- Copy + toast --------
+      const toast = document.getElementById("toast");
+      let toastTimer;
+      async function copyToClipboard(text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+      }
+
+      function wireGalleryCopyButtons() {
+        document.body.addEventListener("click", async (e) => {
+          const btn = e.target.closest(".copy-btn");
+          if (!btn) return;
+          const cfg = btn.dataset.config;
+          if (!cfg) return;
+          const ok = await copyToClipboard(cfg);
+          if (!ok) {
+            btn.textContent = "Press ⌘C";
+            return;
+          }
+          btn.textContent = "Copied";
+          btn.classList.add("copied");
+          showToast(cfg);
+          setTimeout(() => {
+            btn.textContent = "Copy";
+            btn.classList.remove("copied");
+          }, 1800);
+        });
+      }
+
+      // -------- Init --------
+      renderThemes();
+      renderFonts();
+      populateDropdowns();
+      renderMixer();
+      wireMixer();
+      wireGalleryCopyButtons();
+    </script>
+  </body>
+</html>
