@@ -704,6 +704,74 @@
         animation: fadeIn 0.4s ease both;
       }
 
+      /* GitHub button */
+      .gh-btn {
+        position: fixed;
+        top: 1.25rem;
+        right: 1.25rem;
+        z-index: 50;
+        display: inline-flex;
+        align-items: stretch;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--bg-elevated);
+        box-shadow: var(--shadow-sm);
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s,
+          transform 0.15s;
+      }
+      .gh-btn:hover {
+        border-color: var(--text-muted);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+      .gh-btn-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4375rem;
+        padding: 0.5rem 0.75rem;
+        color: var(--text-primary);
+        background: var(--bg-elevated);
+      }
+      .gh-btn-label svg {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .gh-btn-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3125rem;
+        padding: 0.5rem 0.75rem;
+        color: var(--text-secondary);
+        background: var(--bg-surface);
+        border-left: 1px solid var(--border);
+        font-variant-numeric: tabular-nums;
+      }
+      .gh-btn-count::before {
+        content: "★";
+        color: #e3b341;
+        font-size: 0.8125rem;
+        line-height: 1;
+      }
+      @media (max-width: 560px) {
+        .gh-btn {
+          top: 0.75rem;
+          right: 0.75rem;
+          font-size: 0.6875rem;
+        }
+        .gh-btn-label,
+        .gh-btn-count {
+          padding: 0.4375rem 0.625rem;
+        }
+      }
+
       /* Toast */
       .toast {
         position: fixed;
@@ -731,6 +799,26 @@
     </style>
   </head>
   <body>
+    <a
+      class="gh-btn"
+      href="https://github.com/mcvalosborne/ghostty-theme-mixer"
+      target="_blank"
+      rel="noopener"
+      aria-label="Star ghostty-theme-mixer on GitHub"
+    >
+      <span class="gh-btn-label">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+          />
+        </svg>
+        Star on GitHub
+      </span>
+      <span class="gh-btn-count" id="gh-star-count" aria-label="star count"
+        >—</span
+      >
+    </a>
+
     <section class="hero">
       <div class="container hero-content">
         <span class="label">A field guide · v2.0 · mixer</span>
@@ -1544,6 +1632,24 @@
         });
       }
 
+      // -------- GitHub star count --------
+      async function loadStarCount() {
+        const el = document.getElementById("gh-star-count");
+        if (!el) return;
+        try {
+          const res = await fetch(
+            "https://api.github.com/repos/mcvalosborne/ghostty-theme-mixer",
+          );
+          if (!res.ok) throw new Error("gh api");
+          const data = await res.json();
+          const n = data.stargazers_count ?? 0;
+          el.textContent =
+            n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "k" : n;
+        } catch {
+          el.textContent = "★";
+        }
+      }
+
       // -------- Init --------
       renderThemes();
       renderFonts();
@@ -1551,6 +1657,7 @@
       renderMixer();
       wireMixer();
       wireGalleryCopyButtons();
+      loadStarCount();
     </script>
   </body>
 </html>
