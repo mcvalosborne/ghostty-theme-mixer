@@ -4,7 +4,7 @@ Live theme & font mixer for the [Ghostty](https://ghostty.org) terminal. Preview
 
 **→ [Try it live at ghosttythemes.com](https://ghosttythemes.com)**
 
-![Ghostty Theme Mixer — live preview of terminal themes and fonts](screenshot.png)
+![Ghostty Theme Mixer — live demo swapping themes, fonts, and adjusting background tint](demo.gif)
 
 ## What's in it
 
