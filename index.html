@@ -881,7 +881,7 @@
             <div class="terminal" id="mix-terminal"></div>
             <div class="mixer-config">
               <pre id="mix-config"></pre>
-              <button class="btn-copy-lg" id="mix-copy">Copy config</button>
+              <button class="btn-copy-lg" id="mix-copy">Copy command</button>
             </div>
           </div>
         </div>
@@ -895,7 +895,8 @@
           <h2>Color schemes, <em>sixteen ways.</em></h2>
           <p>
             Every palette rendered in its actual hex values. Scroll to compare.
-            Click any "Copy" to grab just the theme line.
+            Click any "Copy" to grab a one-line command that adds just that
+            theme to your config.
           </p>
         </div>
         <div class="theme-grid" id="theme-grid"></div>
@@ -986,19 +987,25 @@
           <li>
             <div>
               Use the <strong>mixer</strong> above (or click Copy on any card) —
-              the config goes to your clipboard.
+              a shell command goes to your clipboard.
             </div>
           </li>
           <li>
             <div>
-              Open your config: <code>~/.config/ghostty/config</code> — replace
-              or add the lines.
+              Paste it into any terminal and hit enter — it appends to
+              <code>~/.config/ghostty/config</code>. No editor required.
             </div>
           </li>
           <li>
             <div>
               Reload with <code>⌘ ⇧ ,</code>. The change appears instantly. No
               restart needed.
+            </div>
+          </li>
+          <li>
+            <div>
+              Prefer to edit the file by hand? The command is transparent — you
+              can read what it will append before pasting.
             </div>
           </li>
           <li>
@@ -1103,7 +1110,7 @@
         },
         {
           name: "Tokyo Night",
-          key: "Tokyo Night",
+          key: "TokyoNight",
           desc: "Cool blues, soft purples. City-at-night mood.",
           p: {
             bg: "#1a1b26",
@@ -1120,7 +1127,7 @@
         },
         {
           name: "Tokyo Night Storm",
-          key: "Tokyo Night Storm",
+          key: "TokyoNight Storm",
           desc: "Tokyo Night with softer bg. Less harsh in low light.",
           p: {
             bg: "#24283b",
@@ -1171,7 +1178,7 @@
         },
         {
           name: "Nord",
-          key: "nord",
+          key: "Nord",
           desc: "Arctic, restrained. Low-sat blues. Scandinavian.",
           p: {
             bg: "#2e3440",
@@ -1205,7 +1212,7 @@
         },
         {
           name: "Rosé Pine",
-          key: "rose-pine",
+          key: "Rose Pine",
           desc: "Muted plum bg. Rose, iris, foam. Poetic.",
           p: {
             bg: "#191724",
@@ -1222,7 +1229,7 @@
         },
         {
           name: "Solarized Dark",
-          key: "Solarized Dark - Patched",
+          key: "Solarized Dark Patched",
           desc: "Scientifically calibrated. The classic.",
           p: {
             bg: "#002b36",
@@ -1239,7 +1246,7 @@
         },
         {
           name: "Solarized Light",
-          key: "Solarized Light",
+          key: "iTerm2 Solarized Light",
           desc: "Same math, inverted. Calm cream for daytime.",
           p: {
             bg: "#fdf6e3",
@@ -1256,7 +1263,7 @@
         },
         {
           name: "Kanagawa",
-          key: "Kanagawa",
+          key: "Kanagawa Wave",
           desc: "Inspired by Hokusai. Muted, painterly.",
           p: {
             bg: "#1f1f28",
@@ -1480,7 +1487,7 @@
                 <div class="preview-title">${t.name}</div>
                 <div class="preview-desc">${t.desc}</div>
               </div>
-              <button class="copy-btn" data-config="theme = ${t.key}">Copy</button>
+              <button class="copy-btn" data-config="mkdir -p ~/.config/ghostty && echo 'theme = ${t.key}' >> ~/.config/ghostty/config">Copy</button>
             </div>
             <div class="terminal" style="${paletteVars(t.p)}">${terminalGallery(t.p)}</div>
           </article>
@@ -1504,7 +1511,7 @@
                 <div class="preview-title">${f.name}${f.ligatures ? ' <span class="lig-badge">lig</span>' : ""}</div>
                 <div class="preview-desc">${f.desc}</div>
               </div>
-              <button class="copy-btn" data-config='font-family = "${f.key}"'>Copy</button>
+              <button class="copy-btn" data-config='mkdir -p ~/.config/ghostty && echo &apos;font-family = "${f.key}"&apos; >> ~/.config/ghostty/config'>Copy</button>
             </div>
             <div class="terminal" style="${paletteVars(tinted)}">${terminalFont()}</div>
           </article>
@@ -1555,7 +1562,11 @@
           lines.push(`background = ${tinted.bg.replace("#", "")}`);
         lines.push(`font-family = "${font.key}"`);
         lines.push(`font-size = 14`);
-        document.getElementById("mix-config").textContent = lines.join("\n");
+        const command = `mkdir -p ~/.config/ghostty && cat >> ~/.config/ghostty/config <<'EOF'
+# ghostty-theme-mixer
+${lines.join("\n")}
+EOF`;
+        document.getElementById("mix-config").textContent = command;
       }
 
       function wireMixer() {
@@ -1588,7 +1599,7 @@
             btn.classList.add("copied");
             showToast(text.split("\n")[0] + "…");
             setTimeout(() => {
-              btn.textContent = "Copy config";
+              btn.textContent = "Copy command";
               btn.classList.remove("copied");
             }, 1800);
           });
