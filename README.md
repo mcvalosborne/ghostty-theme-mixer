@@ -47,8 +47,16 @@ Then re-apply whichever theme you want from the mixer.
 If a `mkdir ...` line ended up inside your config file (e.g., you pasted into a text editor instead of a live terminal), strip it out:
 
 ```bash
-sed -i.bak '/^mkdir /d' ~/.config/ghostty/config && rm -f ~/.config/ghostty/config.bak
+sed -i.bak '/^mkdir /d' ~/.config/ghostty/config && rm -f ~/.config/ghostty/config.bak && grep -c '^mkdir' ~/.config/ghostty/config
 ```
+
+The final `grep -c` should print `0` once the junk is gone. If it prints anything else (or the Ghostty error dialog still appears after `⌘ ⇧ ,`), fall back to a manual edit:
+
+```bash
+nano ~/.config/ghostty/config
+```
+
+In `nano`: navigate to the offending line, `Ctrl+K` to cut it, `Ctrl+O` → `Enter` to save, `Ctrl+X` to exit. Then reload Ghostty.
 
 **A theme name from the mixer isn't recognised by my Ghostty.**
 Shouldn't happen — all 16 keys are verified weekly against upstream (see section above). But if it ever does, find the real spelling with `ghostty +list-themes | grep -i <name>` and [open an issue](../../issues) so it gets fixed.
