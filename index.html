@@ -1487,7 +1487,7 @@
                 <div class="preview-title">${t.name}</div>
                 <div class="preview-desc">${t.desc}</div>
               </div>
-              <button class="copy-btn" data-config="mkdir -p ~/.config/ghostty && echo 'theme = ${t.key}' >> ~/.config/ghostty/config">Copy</button>
+              <button class="copy-btn" data-config="mkdir -p ~/.config/ghostty && printf '\\n# ghostty-theme-mixer\\ntheme = ${t.key}\\nbackground = ${t.p.bg.replace("#", "")}\\n' >> ~/.config/ghostty/config">Copy</button>
             </div>
             <div class="terminal" style="${paletteVars(t.p)}">${terminalGallery(t.p)}</div>
           </article>
@@ -1511,7 +1511,7 @@
                 <div class="preview-title">${f.name}${f.ligatures ? ' <span class="lig-badge">lig</span>' : ""}</div>
                 <div class="preview-desc">${f.desc}</div>
               </div>
-              <button class="copy-btn" data-config='mkdir -p ~/.config/ghostty && echo &apos;font-family = "${f.key}"&apos; >> ~/.config/ghostty/config'>Copy</button>
+              <button class="copy-btn" data-config='mkdir -p ~/.config/ghostty && printf &apos;\\n# ghostty-theme-mixer\\nfont-family = "${f.key}"\\n&apos; >> ~/.config/ghostty/config'>Copy</button>
             </div>
             <div class="terminal" style="${paletteVars(tinted)}">${terminalFont()}</div>
           </article>
