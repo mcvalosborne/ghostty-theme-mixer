@@ -16,11 +16,15 @@ Live theme & font mixer for the [Ghostty](https://ghostty.org) terminal. Preview
 ## Apply your mix
 
 1. Pick theme + font + tint in the mixer
-2. Click **Copy config**
-3. Paste into `~/.config/ghostty/config`
-4. Reload with `⌘ ⇧ ,` in Ghostty — change is instant, no restart
+2. Click **Copy command**
+3. Paste the command into any terminal (Ghostty included) and hit enter — it appends to `~/.config/ghostty/config`
+4. Reload Ghostty with `⌘ ⇧ ,` — change is instant, no restart
 
 If a theme name isn't recognised by your Ghostty version, run `ghostty +list-themes | grep -i <name>` to find the exact spelling.
+
+## Kept in sync with Ghostty
+
+Theme keys in the mixer are verified **weekly** against [iTerm2-Color-Schemes/ghostty](https://github.com/mbadolato/iTerm2-Color-Schemes/tree/master/ghostty) — the upstream source Ghostty bundles its themes from. If a theme is ever renamed or removed upstream, a GitHub issue is opened automatically (see [`.github/workflows/check-themes.yml`](.github/workflows/check-themes.yml)) so the mixer stays in lockstep with whatever you have installed.
 
 ## Local development
 

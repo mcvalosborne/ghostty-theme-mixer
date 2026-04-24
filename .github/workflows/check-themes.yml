@@ -1,0 +1,102 @@
+name: Check theme keys
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch upstream Ghostty theme filenames
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/mbadolato/iTerm2-Color-Schemes/contents/ghostty" \
+            | jq -r '.[].name' | sort > upstream.txt
+          count=$(wc -l < upstream.txt)
+          if [ "$count" -lt 100 ]; then
+            echo "Upstream fetch returned only $count themes — aborting."
+            exit 1
+          fi
+          echo "Fetched $count upstream themes."
+
+      - name: Extract mixer theme keys
+        run: |
+          awk '/const themes = \[/,/^      \];/' index.html \
+            | grep -oE 'key: "[^"]+"' \
+            | sed -E 's/key: "(.+)"/\1/' \
+            | sort -u > mixer.txt
+          echo "Found $(wc -l < mixer.txt) keys in mixer:"
+          cat mixer.txt
+
+      - name: Compare
+        id: diff
+        run: |
+          missing=$(comm -23 mixer.txt upstream.txt)
+          if [ -n "$missing" ]; then
+            echo "=== DRIFT DETECTED ==="
+            echo "$missing"
+            {
+              echo "missing<<EOF"
+              echo "$missing"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "All mixer keys match upstream."
+          fi
+
+      - name: Open or update issue
+        if: steps.diff.outputs.missing != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const missing = process.env.MISSING.trim();
+            const body = [
+              "The weekly theme-drift check found `key` values in `index.html` that no longer match any file in Ghostty's upstream themes (sourced from [iTerm2-Color-Schemes/ghostty](https://github.com/mbadolato/iTerm2-Color-Schemes/tree/master/ghostty)).",
+              "",
+              "**Keys that no longer resolve:**",
+              "```",
+              missing,
+              "```",
+              "",
+              "Fix: update the `key` values in the `themes` array in `index.html` so each matches an existing filename upstream.",
+              "",
+              "Verify locally: `ls /Applications/Ghostty.app/Contents/Resources/ghostty/themes/`",
+            ].join("\n");
+
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'theme-drift',
+            });
+
+            if (existing.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existing[0].number,
+                body,
+              });
+              core.info(`Commented on existing issue #${existing[0].number}`);
+            } else {
+              const { data: issue } = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Theme keys out of sync with Ghostty upstream',
+                body,
+                labels: ['theme-drift'],
+              });
+              core.info(`Opened issue #${issue.number}`);
+            }
+        env:
+          MISSING: ${{ steps.diff.outputs.missing }}
